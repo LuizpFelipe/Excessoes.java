@@ -33,16 +33,12 @@ public class Program {
 			System.out.print("Data do Check-Out:");
 			checkout = sdf.parse(sc.next());
 
-			Date agora = new Date();
-
-			if (checkin.before(agora) || checkout.before(agora)) {
-				System.out.println(
-						"Reserva invalida: as datas só podem ser alteradas para uma data Futura da que esta reservada.");
-			} else if (!checkout.after(checkin)) {
-				System.out.println("Erro! Check-in excedeu o valor do Check-Out, Por Favor tente novamente.");
-			} else {
-				reservado.updateDatas(checkin, checkout);
-				System.out.println("Reservado: " + reservado);
+			
+			String error = 	reservado.updateDatas(checkin, checkout);
+			if(error != null) {
+				System.out.println("Erro na Reserva" + error);
+			}else {
+				System.out.println("Reserva: " + reservado);
 			}
 		}
 
