@@ -1,9 +1,11 @@
-package entidades;
+package Hotel.entidades;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import hhotel.excessoes.DominioExcessoes;
+import hhotel.excessoes.DominioExcessoes;
 public class Reserva {
 	private Integer numeroQuarto;
 	private Date checkIn;
@@ -11,7 +13,11 @@ public class Reserva {
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-	public Reserva(Integer numeroQuarto, Date checkIn, Date checkOut) {
+	public Reserva(Integer numeroQuarto, Date checkIn, Date checkOut){
+		if (!checkOut.after(checkIn)) {
+			throw new DominioExcessoes("Erro! Check-in excedeu o valor do Check-Out, Por Favor tente novamente.");
+		}
+		
 		this.numeroQuarto = numeroQuarto;
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
@@ -38,18 +44,17 @@ public class Reserva {
 		return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 	}
 
-	public String updateDatas(Date checkIn, Date checkOut) {
+	public void updateDatas(Date checkIn, Date checkOut){
 		Date agora = new Date();
 		
 		if(checkIn.before(agora) || checkOut.before(agora)) {
-			
-			return"Reserva invalida: as datas só podem ser alteradas para uma data Futura da que esta reservada.";
-		} if (!checkOut.after(checkIn)) {
-			return "Erro! Check-in excedeu o valor do Check-Out, Por Favor tente novamente.";
+			throw new DominioExcessoes("Reserva invalida: as datas só podem ser alteradas para uma data Futura da que esta reservada.");
+		} 
+		if (!checkOut.after(checkIn)) {
+			throw new DominioExcessoes("Erro! Check-in excedeu o valor do Check-Out, Por Favor tente novamente.");
 		}
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
-		return null;
 	}
 
 	@Override
